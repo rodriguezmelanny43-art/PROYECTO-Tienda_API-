@@ -1,0 +1,664 @@
+### 1.1 Registro exitoso
+Endpoint: POST /api/auth/register
+Headers: {
+  "Content-Type": "application/json"
+}
+Request Payload: {
+  "name": "Melanny Rodriguez",
+  "email": "mel@correo.com",
+  "password": "clave123"
+}
+Response Status: 201 Created
+Response Payload: {
+  "message": "Usuario registrado correctamente",
+  "user": {
+    "id": "6afba11f25b8cf4cab6d06ec",
+    "name": "Melanny Rodriguez",
+    "email": "mel@correo.com",
+    "role": "user"
+  }
+}
+
+### 1.2 Registro con email duplicado
+Endpoint: POST /api/auth/register
+Headers: {
+  "Content-Type": "application/json"
+}
+Request Payload: {
+  "name": "Otra Persona",
+  "email": "mel@correo.com",
+  "password": "clave123"
+}
+Response Status: 409 Conflict
+Response Payload: {
+  "message": "Ya existe un registro con esos datos"
+}
+
+### 1.3 Registro con datos invalidos
+Endpoint: POST /api/auth/register
+Headers: {
+  "Content-Type": "application/json"
+}
+Request Payload: {
+  "name": "A",
+  "email": "correo-malo",
+  "password": "123"
+}
+Response Status: 400 Bad Request
+Response Payload: {
+  "message": "Error de validacion",
+  "errors": [
+    "La contrasena debe tener al menos 6 caracteres"
+  ]
+}
+
+### 1.4 Registro intentando asignarse rol admin
+Endpoint: POST /api/auth/register
+Headers: {
+  "Content-Type": "application/json"
+}
+Request Payload: {
+  "name": "Intruso",
+  "email": "intruso@correo.com",
+  "password": "clave123",
+  "role": "admin"
+}
+Response Status: 201 Created
+Response Payload: {
+  "message": "Usuario registrado correctamente",
+  "user": {
+    "id": "6afba11f25b8cf4cab6d06ee",
+    "name": "Intruso",
+    "email": "intruso@correo.com",
+    "role": "user"
+  }
+}
+
+### 2.1 Login exitoso
+Endpoint: POST /api/auth/login
+Headers: {
+  "Content-Type": "application/json"
+}
+Request Payload: {
+  "email": "mel@correo.com",
+  "password": "clave123"
+}
+Response Status: 200 OK
+Response Payload: {
+  "message": "Login exitoso",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhZmJhMTFmMjViOGNmNGNhYjZkMDZlYyIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0ODc1Njc5LCJleHAiOjE3OTQ5NjIwNzl9.X8ntRgBaKInBEfgv4ucMfkL0bkU5H3DtspxdHKi-e60",
+  "user": {
+    "id": "6afba11f25b8cf4cab6d06ec",
+    "name": "Melanny Rodriguez",
+    "email": "mel@correo.com",
+    "role": "user"
+  }
+}
+
+### 2.2 Login con contrasena incorrecta
+Endpoint: POST /api/auth/login
+Headers: {
+  "Content-Type": "application/json"
+}
+Request Payload: {
+  "email": "mel@correo.com",
+  "password": "incorrecta"
+}
+Response Status: 401 Unauthorized
+Response Payload: {
+  "message": "Credenciales invalidas"
+}
+
+### 2.3 Login con email inexistente
+Endpoint: POST /api/auth/login
+Headers: {
+  "Content-Type": "application/json"
+}
+Request Payload: {
+  "email": "nadie@correo.com",
+  "password": "clave123"
+}
+Response Status: 401 Unauthorized
+Response Payload: {
+  "message": "Credenciales invalidas"
+}
+
+### 2.4 Registro del segundo usuario
+Endpoint: POST /api/auth/register
+Headers: {
+  "Content-Type": "application/json"
+}
+Request Payload: {
+  "name": "Carlos Perez",
+  "email": "carlos@correo.com",
+  "password": "clave456"
+}
+Response Status: 201 Created
+Response Payload: {
+  "message": "Usuario registrado correctamente",
+  "user": {
+    "id": "6afba11f25b8cf4cab6d06ef",
+    "name": "Carlos Perez",
+    "email": "carlos@correo.com",
+    "role": "user"
+  }
+}
+
+### 2.5 Login del segundo usuario
+Endpoint: POST /api/auth/login
+Headers: {
+  "Content-Type": "application/json"
+}
+Request Payload: {
+  "email": "carlos@correo.com",
+  "password": "clave456"
+}
+Response Status: 200 OK
+Response Payload: {
+  "message": "Login exitoso",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhZmJhMTFmMjViOGNmNGNhYjZkMDZlZiIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0ODc1NjgwLCJleHAiOjE3OTQ5NjIwODB9.xB9MJCuttf772AZnR7v07p7e9KlYAJm12wmkvW6D82M",
+  "user": {
+    "id": "6afba11f25b8cf4cab6d06ef",
+    "name": "Carlos Perez",
+    "email": "carlos@correo.com",
+    "role": "user"
+  }
+}
+
+### 2.6 Login del administrador
+Endpoint: POST /api/auth/login
+Headers: {
+  "Content-Type": "application/json"
+}
+Request Payload: {
+  "email": "admin@tienda.com",
+  "password": "admin123"
+}
+Response Status: 200 OK
+Response Payload: {
+  "message": "Login exitoso",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhZmJhMTFmMjViOGNmNGNhYjZkMDZlOCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc5NDg3NTY4MCwiZXhwIjoxNzk0OTYyMDgwfQ.iw-seHGLsvesNKsLQkv3XqA_wJH173Ppl49z97rdxKc",
+  "user": {
+    "id": "6afba11f25b8cf4cab6d06e8",
+    "name": "Administrador",
+    "email": "admin@tienda.com",
+    "role": "admin"
+  }
+}
+
+### 3.1 Ruta privada sin token
+Endpoint: GET /api/orders
+Headers: (ninguno)
+Request Payload: (sin cuerpo)
+Response Status: 401 Unauthorized
+Response Payload: {
+  "message": "Acceso denegado: falta el token Bearer"
+}
+
+### 3.2 Ruta privada con token invalido
+Endpoint: GET /api/orders
+Headers: {
+  "Authorization": "Bearer <token>"
+}
+Request Payload: (sin cuerpo)
+Response Status: 401 Unauthorized
+Response Payload: {
+  "message": "Token invalido"
+}
+
+### 3.3 Token firmado con otro secreto
+Endpoint: GET /api/orders
+Headers: {
+  "Authorization": "Bearer <token>"
+}
+Request Payload: (sin cuerpo)
+Response Status: 401 Unauthorized
+Response Payload: {
+  "message": "Token invalido"
+}
+
+### 4.1 Listar productos (publico)
+Endpoint: GET /api/products
+Headers: (ninguno)
+Request Payload: (sin cuerpo)
+Response Status: 200 OK
+Response Payload: {
+  "count": 3,
+  "products": [
+    {
+      "_id": "6afba11f25b8cf4cab6d06e9",
+      "name": "Laptop Pro 14",
+      "description": "Laptop de 14 pulgadas",
+      "price": 3500,
+      "stock": 10,
+      "__v": 0,
+      "createdAt": "2026-11-17T00:34:39.391Z",
+      "updatedAt": "2026-11-17T00:34:39.391Z"
+    },
+    {
+      "_id": "6afba11f25b8cf4cab6d06ea",
+      "name": "Mouse inalambrico",
+      "description": "Mouse optico USB",
+      "price": 45.5,
+      "stock": 50,
+      "__v": 0,
+      "createdAt": "2026-11-17T00:34:39.391Z",
+      "updatedAt": "2026-11-17T00:34:39.391Z"
+    },
+    {
+      "_id": "6afba11f25b8cf4cab6d06eb",
+      "name": "Teclado mecanico",
+      "description": "Teclado switch azul",
+      "price": 180,
+      "stock": 25,
+      "__v": 0,
+      "createdAt": "2026-11-17T00:34:39.391Z",
+      "updatedAt": "2026-11-17T00:34:39.391Z"
+    }
+  ]
+}
+
+### 4.2 Crear producto como usuario normal
+Endpoint: POST /api/products
+Headers: {
+  "Content-Type": "application/json",
+  "Authorization": "Bearer <token>"
+}
+Request Payload: {
+  "name": "Monitor 24",
+  "description": "Full HD",
+  "price": 650,
+  "stock": 8
+}
+Response Status: 403 Forbidden
+Response Payload: {
+  "message": "No tienes permisos para esta accion"
+}
+
+### 4.3 Crear producto como admin
+Endpoint: POST /api/products
+Headers: {
+  "Content-Type": "application/json",
+  "Authorization": "Bearer <token>"
+}
+Request Payload: {
+  "name": "Monitor 24",
+  "description": "Full HD",
+  "price": 650,
+  "stock": 8
+}
+Response Status: 201 Created
+Response Payload: {
+  "message": "Producto creado",
+  "product": {
+    "name": "Monitor 24",
+    "description": "Full HD",
+    "price": 650,
+    "stock": 8,
+    "_id": "6afba12025b8cf4cab6d06f0",
+    "createdAt": "2026-11-17T00:34:40.155Z",
+    "updatedAt": "2026-11-17T00:34:40.155Z",
+    "__v": 0
+  }
+}
+
+### 4.4 Crear producto con stock negativo
+Endpoint: POST /api/products
+Headers: {
+  "Content-Type": "application/json",
+  "Authorization": "Bearer <token>"
+}
+Request Payload: {
+  "name": "Producto malo",
+  "price": 10,
+  "stock": -5
+}
+Response Status: 400 Bad Request
+Response Payload: {
+  "message": "Error de validacion",
+  "errors": [
+    "El stock no puede ser negativo"
+  ]
+}
+
+### 5.1 Crear orden exitosa (2 mouse + 1 laptop)
+Endpoint: POST /api/orders
+Headers: {
+  "Content-Type": "application/json",
+  "Authorization": "Bearer <token>"
+}
+Request Payload: {
+  "items": [
+    {
+      "productId": "6afba11f25b8cf4cab6d06ea",
+      "quantity": 2
+    },
+    {
+      "productId": "6afba11f25b8cf4cab6d06e9",
+      "quantity": 1
+    }
+  ]
+}
+Response Status: 201 Created
+Response Payload: {
+  "message": "Orden creada correctamente",
+  "order": {
+    "user": "6afba11f25b8cf4cab6d06ec",
+    "items": [
+      {
+        "product": "6afba11f25b8cf4cab6d06ea",
+        "name": "Mouse inalambrico",
+        "price": 45.5,
+        "quantity": 2
+      },
+      {
+        "product": "6afba11f25b8cf4cab6d06e9",
+        "name": "Laptop Pro 14",
+        "price": 3500,
+        "quantity": 1
+      }
+    ],
+    "total": 3591,
+    "status": "completada",
+    "_id": "6afba12025b8cf4cab6d06f2",
+    "createdAt": "2026-11-17T00:34:40.175Z",
+    "updatedAt": "2026-11-17T00:34:40.175Z",
+    "__v": 0
+  }
+}
+
+### 5.1b Verificar el stock tras la compra
+Endpoint: GET /api/products
+Headers: (ninguno)
+Request Payload: (sin cuerpo)
+Response Status: 200 OK
+Response Payload: {
+  "count": 4,
+  "products": [
+    {
+      "_id": "6afba11f25b8cf4cab6d06e9",
+      "name": "Laptop Pro 14",
+      "description": "Laptop de 14 pulgadas",
+      "price": 3500,
+      "stock": 9,
+      "__v": 0,
+      "createdAt": "2026-11-17T00:34:39.391Z",
+      "updatedAt": "2026-11-17T00:34:40.170Z"
+    },
+    {
+      "_id": "6afba12025b8cf4cab6d06f0",
+      "name": "Monitor 24",
+      "description": "Full HD",
+      "price": 650,
+      "stock": 8,
+      "createdAt": "2026-11-17T00:34:40.155Z",
+      "updatedAt": "2026-11-17T00:34:40.155Z",
+      "__v": 0
+    },
+    {
+      "_id": "6afba11f25b8cf4cab6d06ea",
+      "name": "Mouse inalambrico",
+      "description": "Mouse optico USB",
+      "price": 45.5,
+      "stock": 48,
+      "__v": 0,
+      "createdAt": "2026-11-17T00:34:39.391Z",
+      "updatedAt": "2026-11-17T00:34:40.165Z"
+    },
+    {
+      "_id": "6afba11f25b8cf4cab6d06eb",
+      "name": "Teclado mecanico",
+      "description": "Teclado switch azul",
+      "price": 180,
+      "stock": 25,
+      "__v": 0,
+      "createdAt": "2026-11-17T00:34:39.391Z",
+      "updatedAt": "2026-11-17T00:34:39.391Z"
+    }
+  ]
+}
+
+### 5.2 Listar mis ordenes
+Endpoint: GET /api/orders
+Headers: {
+  "Authorization": "Bearer <token>"
+}
+Request Payload: (sin cuerpo)
+Response Status: 200 OK
+Response Payload: {
+  "count": 1,
+  "orders": [
+    {
+      "_id": "6afba12025b8cf4cab6d06f2",
+      "user": "6afba11f25b8cf4cab6d06ec",
+      "items": [
+        {
+          "product": "6afba11f25b8cf4cab6d06ea",
+          "name": "Mouse inalambrico",
+          "price": 45.5,
+          "quantity": 2
+        },
+        {
+          "product": "6afba11f25b8cf4cab6d06e9",
+          "name": "Laptop Pro 14",
+          "price": 3500,
+          "quantity": 1
+        }
+      ],
+      "total": 3591,
+      "status": "completada",
+      "createdAt": "2026-11-17T00:34:40.175Z",
+      "updatedAt": "2026-11-17T00:34:40.175Z",
+      "__v": 0
+    }
+  ]
+}
+
+### 5.3 Orden con stock insuficiente (revierte todo)
+Endpoint: POST /api/orders
+Headers: {
+  "Content-Type": "application/json",
+  "Authorization": "Bearer <token>"
+}
+Request Payload: {
+  "items": [
+    {
+      "productId": "6afba11f25b8cf4cab6d06eb",
+      "quantity": 5
+    },
+    {
+      "productId": "6afba11f25b8cf4cab6d06e9",
+      "quantity": 999
+    }
+  ]
+}
+Response Status: 409 Conflict
+Response Payload: {
+  "message": "Stock insuficiente para \"Laptop Pro 14\"",
+  "disponible": 9,
+  "solicitado": 999
+}
+
+### 5.4 Orden con producto inexistente
+Endpoint: POST /api/orders
+Headers: {
+  "Content-Type": "application/json",
+  "Authorization": "Bearer <token>"
+}
+Request Payload: {
+  "items": [
+    {
+      "productId": "64b7f0c2a1b2c3d4e5f60718",
+      "quantity": 1
+    }
+  ]
+}
+Response Status: 404 Not Found
+Response Payload: {
+  "message": "Producto no encontrado: 64b7f0c2a1b2c3d4e5f60718"
+}
+
+### 5.5 Orden con cantidad invalida
+Endpoint: POST /api/orders
+Headers: {
+  "Content-Type": "application/json",
+  "Authorization": "Bearer <token>"
+}
+Request Payload: {
+  "items": [
+    {
+      "productId": "6afba11f25b8cf4cab6d06ea",
+      "quantity": 0
+    }
+  ]
+}
+Response Status: 400 Bad Request
+Response Payload: {
+  "message": "La cantidad debe ser un entero mayor o igual a 1"
+}
+
+### 5.6 Orden sin items
+Endpoint: POST /api/orders
+Headers: {
+  "Content-Type": "application/json",
+  "Authorization": "Bearer <token>"
+}
+Request Payload: {
+  "items": []
+}
+Response Status: 400 Bad Request
+Response Payload: {
+  "message": "Debes enviar al menos un producto en \"items\""
+}
+
+### 6.1 Devolver orden de otro usuario
+Endpoint: POST /api/orders/6afba12025b8cf4cab6d06f2/return
+Headers: {
+  "Authorization": "Bearer <token>"
+}
+Request Payload: (sin cuerpo)
+Response Status: 403 Forbidden
+Response Payload: {
+  "message": "No puedes devolver una orden de otro usuario"
+}
+
+### 6.2 Devolver orden propia
+Endpoint: POST /api/orders/6afba12025b8cf4cab6d06f2/return
+Headers: {
+  "Authorization": "Bearer <token>"
+}
+Request Payload: (sin cuerpo)
+Response Status: 200 OK
+Response Payload: {
+  "message": "Orden devuelta y stock restaurado",
+  "order": {
+    "_id": "6afba12025b8cf4cab6d06f2",
+    "user": "6afba11f25b8cf4cab6d06ec",
+    "items": [
+      {
+        "product": "6afba11f25b8cf4cab6d06ea",
+        "name": "Mouse inalambrico",
+        "price": 45.5,
+        "quantity": 2
+      },
+      {
+        "product": "6afba11f25b8cf4cab6d06e9",
+        "name": "Laptop Pro 14",
+        "price": 3500,
+        "quantity": 1
+      }
+    ],
+    "total": 3591,
+    "status": "devuelta",
+    "createdAt": "2026-11-17T00:34:40.175Z",
+    "updatedAt": "2026-11-17T00:34:40.238Z",
+    "__v": 0,
+    "returnedAt": "2026-11-17T00:34:40.238Z"
+  }
+}
+
+### 6.2b Verificar el stock tras la devolucion
+Endpoint: GET /api/products
+Headers: (ninguno)
+Request Payload: (sin cuerpo)
+Response Status: 200 OK
+Response Payload: {
+  "count": 4,
+  "products": [
+    {
+      "_id": "6afba11f25b8cf4cab6d06e9",
+      "name": "Laptop Pro 14",
+      "description": "Laptop de 14 pulgadas",
+      "price": 3500,
+      "stock": 10,
+      "__v": 0,
+      "createdAt": "2026-11-17T00:34:39.391Z",
+      "updatedAt": "2026-11-17T00:34:40.241Z"
+    },
+    {
+      "_id": "6afba12025b8cf4cab6d06f0",
+      "name": "Monitor 24",
+      "description": "Full HD",
+      "price": 650,
+      "stock": 8,
+      "createdAt": "2026-11-17T00:34:40.155Z",
+      "updatedAt": "2026-11-17T00:34:40.155Z",
+      "__v": 0
+    },
+    {
+      "_id": "6afba11f25b8cf4cab6d06ea",
+      "name": "Mouse inalambrico",
+      "description": "Mouse optico USB",
+      "price": 45.5,
+      "stock": 50,
+      "__v": 0,
+      "createdAt": "2026-11-17T00:34:39.391Z",
+      "updatedAt": "2026-11-17T00:34:40.241Z"
+    },
+    {
+      "_id": "6afba11f25b8cf4cab6d06eb",
+      "name": "Teclado mecanico",
+      "description": "Teclado switch azul",
+      "price": 180,
+      "stock": 25,
+      "__v": 0,
+      "createdAt": "2026-11-17T00:34:39.391Z",
+      "updatedAt": "2026-11-17T00:34:40.204Z"
+    }
+  ]
+}
+
+### 6.3 Devolver la misma orden otra vez
+Endpoint: POST /api/orders/6afba12025b8cf4cab6d06f2/return
+Headers: {
+  "Authorization": "Bearer <token>"
+}
+Request Payload: (sin cuerpo)
+Response Status: 409 Conflict
+Response Payload: {
+  "message": "La orden ya fue devuelta anteriormente"
+}
+
+### 6.4 Devolver orden con id mal formado
+Endpoint: POST /api/orders/abc123/return
+Headers: {
+  "Authorization": "Bearer <token>"
+}
+Request Payload: (sin cuerpo)
+Response Status: 400 Bad Request
+Response Payload: {
+  "message": "Identificador invalido: abc123"
+}
+
+### 6.5 Devolver orden inexistente
+Endpoint: POST /api/orders/64b7f0c2a1b2c3d4e5f60718/return
+Headers: {
+  "Authorization": "Bearer <token>"
+}
+Request Payload: (sin cuerpo)
+Response Status: 404 Not Found
+Response Payload: {
+  "message": "Orden no encontrada"
+}
+
+Resumen: 34 verificaciones correctas, 0 fallidas.
